@@ -1,39 +1,64 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class InvestmentsPriceScreen extends StatefulWidget {
   const InvestmentsPriceScreen({Key? key}) : super(key: key);
 
   @override
-  _InvestmentsPriceScreenState createState() => _InvestmentsPriceScreenState();
+  _InvestmentsPriceScreenState createState() =>
+      _InvestmentsPriceScreenState();
 }
 
 class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   late Timer _timer;
-  final Random _random = Random();
-
   double _dollarPrice = 0.0;
   double _euroPrice = 0.0;
   double _bitcoinPrice = 0.0;
-  double _ethereumPrice = 0.0;
+  double _goldPrice = 0.0;
+  double _ethPrice = 0.0;
+  static const String apiKey = 'CG-HvUmadPn6VmzSmjS9iEcanf2';
 
   @override
   void initState() {
     super.initState();
-    _updatePrices();
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      _updatePrices();
+    _fetchPrices();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _fetchPrices();
     });
   }
 
-  void _updatePrices() {
-    setState(() {
-      _dollarPrice = 1 + _random.nextDouble() * 0.5;
-      _euroPrice = 0.8 + _random.nextDouble() * 0.5;
-      _bitcoinPrice = 20000 + _random.nextDouble() * 5000;
-      _ethereumPrice = 1500 + _random.nextDouble() * 500;
-    });
+  Future<void> _fetchPrices() async {
+    try {
+      final cryptoUrl = Uri.parse(
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&api_key=$apiKey');
+      final cryptoResponse = await http.get(cryptoUrl);
+
+      // API returns TRY-based rates when base is TRY.
+      final currencyUrl = Uri.parse(
+          'https://v6.exchangerate-api.com/v6/2103d13e3d31336e65522c18/latest/TRY');
+      final currencyResponse = await http.get(currencyUrl);
+
+      if (cryptoResponse.statusCode == 200 &&
+          currencyResponse.statusCode == 200) {
+        final cryptoData = json.decode(cryptoResponse.body);
+        final currencyData = json.decode(currencyResponse.body);
+
+        // Invert the values to get USD/TL and EUR/TL.
+        final usdRate = (currencyData['conversion_rates']?['USD'] as num?)?.toDouble() ?? 0.0;
+        final eurRate = (currencyData['conversion_rates']?['EUR'] as num?)?.toDouble() ?? 0.0;
+        setState(() {
+          _bitcoinPrice = (cryptoData['bitcoin']?['usd'] as num?)?.toDouble() ?? 0.0;
+          _ethPrice = (cryptoData['ethereum']?['usd'] as num?)?.toDouble() ?? 0.0;
+          _dollarPrice = usdRate != 0.0 ? 1 / usdRate : 0.0;
+          _euroPrice = eurRate != 0.0 ? 1 / eurRate : 0.0;
+          _goldPrice = 1900.0;
+        });
+      }
+    } catch (e) {
+      print('Error fetching prices: $e');
+    }
   }
 
   @override
@@ -62,7 +87,6 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        // Header row from investments_screen
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -80,11 +104,11 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
           ),
         ),
         const SizedBox(height: 10),
-        // Price tiles from price_screen
-        _buildPriceTile('Dollar', '\$', _dollarPrice),
-        _buildPriceTile('Euro', '€', _euroPrice),
+        _buildPriceTile('Dollar/TL', '', _dollarPrice),
+        _buildPriceTile('Euro/TL', '', _euroPrice),
+        _buildPriceTile('Gold', '\$', _goldPrice),
         _buildPriceTile('Bitcoin', '\$', _bitcoinPrice),
-        _buildPriceTile('Ethereum', '\$', _ethereumPrice),
+        _buildPriceTile('Ethereum', '\$', _ethPrice),
       ],
     );
   }
