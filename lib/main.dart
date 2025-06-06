@@ -1,4 +1,4 @@
-// File: lib/main.dart
+// File: `lib/main.dart`
 import 'package:flutter/material.dart';
 import 'screens/expense_screen.dart';
 import 'screens/savings_wizard_screen.dart';
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Kişisel Bütçe Uygulaması',
+      title: 'Personal Budget',
       theme: ThemeData(
         brightness: Brightness.light,
         fontFamily: 'San Francisco',
@@ -42,10 +42,11 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = <Widget>[
-    NewsScreen(), // Updated here
+    NewsScreen(),
+    // Use ExpenseScreen as defined in expense_screen.dart
     ExpenseScreen(),
     SavingsWizardScreen(),
-    InvestmentsPriceScreen(), // Updated here
+    InvestmentsPriceScreen(),
     AssetsScreen(),
   ];
 
@@ -55,7 +56,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // File: lib/main.dart (within _HomePageState.build)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +74,12 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        title: const Text('Kişisel Bütçe Uygulaması'),
+        title: const Text('Personal Budget App',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            )),
       ),
       body: _screens.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
@@ -95,16 +100,11 @@ class _HomePageState extends State<HomePage> {
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
           items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.article), label: 'Haberler'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long), label: 'Harcamaların'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.savings), label: 'Para Biriktirme'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_balance_wallet), label: 'Yatırımlar'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.inventory), label: 'Varlıklar'),
+            BottomNavigationBarItem(icon: Icon(Icons.article), label: 'News'),
+            BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Ödemeler'),
+            BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Faiz Sihirbazı'),
+            BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Yatırımlar'),
+            BottomNavigationBarItem(icon: Icon(Icons.inventory), label: 'Giderler'),
           ],
         ),
       ),
