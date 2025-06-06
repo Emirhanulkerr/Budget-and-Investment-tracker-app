@@ -24,7 +24,7 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   void initState() {
     super.initState();
     _fetchPrices();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       _fetchPrices();
     });
   }
