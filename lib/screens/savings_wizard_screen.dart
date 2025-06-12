@@ -67,20 +67,13 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Para Biriktirme Sihirbazı')),
+      backgroundColor: Colors.black, // Updated background color to black
+      appBar: AppBar(title: const Text('Kredi Faizi Hesaplama')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Para Biriktirme Sihirbazı',
-              style: TextStyle(
-                fontFamily: 'San Francisco',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             const SizedBox(height: 20),
             const Text('Hedef birikim miktarınızı giriniz:'),
             TextField(
