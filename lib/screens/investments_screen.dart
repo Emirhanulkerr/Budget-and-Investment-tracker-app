@@ -18,7 +18,7 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   double _bitcoinPrice = 0.0;
   double _goldPrice = 0.0;
   double _ethPrice = 0.0;
-  static const String apiKey = 'CG-HvUmadPn6VmzSmjS9iEcanf2';
+  static const String apiKey = 'YOUR-API-KEY';
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
 
       // API returns TRY-based rates when base is TRY.
       final currencyUrl = Uri.parse(
-          'https://v6.exchangerate-api.com/v6/2103d13e3d31336e65522c18/latest/TRY');
+          'https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/TRY');
       final currencyResponse = await http.get(currencyUrl);
 
       if (cryptoResponse.statusCode == 200 &&
