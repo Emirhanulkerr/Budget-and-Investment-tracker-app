@@ -1,5 +1,6 @@
-// File: `lib/main.dart`
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'models/salary_model.dart';
 import 'screens/expense_screen.dart';
 import 'screens/savings_wizard_screen.dart';
 import 'screens/investments_screen.dart';
@@ -7,7 +8,12 @@ import 'screens/assets_screen.dart';
 import 'screens/news_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => SalaryModel(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -40,10 +46,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-
   final List<Widget> _screens = <Widget>[
     NewsScreen(),
-    // Use ExpenseScreen as defined in expense_screen.dart
     ExpenseScreen(),
     SavingsWizardScreen(),
     InvestmentsPriceScreen(),
@@ -62,6 +66,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black87,
       appBar: AppBar(
         elevation: 0,
+        centerTitle: false,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -74,12 +79,30 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        title: const Text('Bütçem',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            )),
+        title: Row(
+          children: [
+            const Text(
+              'Bütçem',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const Spacer(),
+            Consumer<SalaryModel>(
+              builder: (context, salaryModel, child) {
+                return Text(
+                  '₺${salaryModel.salary.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: _screens.elementAt(_selectedIndex),
       bottomNavigationBar: Container(

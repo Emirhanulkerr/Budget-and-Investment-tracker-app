@@ -1,5 +1,8 @@
 // File: `lib/screens/expense_screen.dart`
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/salary_model.dart';
+
 
 enum ExpenseType { fixedInfinite, fixedCount }
 
@@ -187,6 +190,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       );
       return;
     }
+    // Deduct installment amount from salary.
+    Provider.of<SalaryModel>(context, listen: false).deduct(installment.amount);
     setState(() {
       if (installment.expenseType == ExpenseType.fixedCount &&
           installment.remainingInstallments > 0) {
