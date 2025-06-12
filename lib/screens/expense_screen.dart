@@ -216,6 +216,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // Updated background color to black
       appBar: AppBar(title: const Text('Gider ve Taksit Takibi')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -59,22 +59,22 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade900,
+      backgroundColor: Colors.black87,
       appBar: AppBar(
         elevation: 0,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.deepPurple.shade900,
-                Colors.deepPurple.shade300,
+                Colors.black87,
+                Colors.indigo.shade900,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
           ),
         ),
-        title: const Text('Personal Budget App',
+        title: const Text('Bütçem',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -86,8 +86,8 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.deepPurple.shade400,
-              Colors.deepPurple.shade800,
+              Colors.black87,
+              Colors.black87,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.article), label: 'News'),
             BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Ödemeler'),
-            BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Faiz Sihirbazı'),
+            BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Faiz'),
             BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Yatırımlar'),
             BottomNavigationBarItem(icon: Icon(Icons.inventory), label: 'Giderler'),
           ],
