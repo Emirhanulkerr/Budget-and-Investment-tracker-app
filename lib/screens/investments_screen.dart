@@ -18,7 +18,7 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   double _bitcoinPrice = 0.0;
   double _goldPrice = 0.0;
   double _ethPrice = 0.0;
-  static const String apiKey = 'CG-HvUmadPn6VmzSmjS9iEcanf2';
+  static const String apiKey = 'YOUR-API-KEY';
 
   @override
   void initState() {
@@ -36,11 +36,11 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
       final cryptoResponse = await http.get(cryptoUrl);
 
       final currencyUrl = Uri.parse(
-          'https://v6.exchangerate-api.com/v6/2103d13e3d31336e65522c18/latest/TRY');
+          'https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/TRY');
       final currencyResponse = await http.get(currencyUrl);
 
       final goldUrl = Uri.parse(
-          'https://api.metalpriceapi.com/v1/latest?api_key=a5caa0fa13d8805ea0cfef0494f96cba&base=USD&currencies=XAU');
+          'https://api.metalpriceapi.com/v1/latest?api_key=YOUR-API-KEY&base=USD&currencies=XAU');
       final goldResponse = await http.get(goldUrl);
 
       print('Crypto response: ${cryptoResponse.body}');
