@@ -1,3 +1,4 @@
+// File: lib/screens/investments_screen.dart
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -7,8 +8,7 @@ class InvestmentsPriceScreen extends StatefulWidget {
   const InvestmentsPriceScreen({Key? key}) : super(key: key);
 
   @override
-  _InvestmentsPriceScreenState createState() =>
-      _InvestmentsPriceScreenState();
+  _InvestmentsPriceScreenState createState() => _InvestmentsPriceScreenState();
 }
 
 class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
@@ -18,13 +18,13 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   double _bitcoinPrice = 0.0;
   double _goldPrice = 0.0;
   double _ethPrice = 0.0;
-  static const String apiKey = 'YOUR-API-KEY';
+  static const String apiKey = 'CG-HvUmadPn6VmzSmjS9iEcanf2';
 
   @override
   void initState() {
     super.initState();
     _fetchPrices();
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 100), (timer) {
       _fetchPrices();
     });
   }
@@ -35,17 +35,24 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
           'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&api_key=$apiKey');
       final cryptoResponse = await http.get(cryptoUrl);
 
-      // API returns TRY-based rates when base is TRY.
       final currencyUrl = Uri.parse(
-          'https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/TRY');
+          'https://v6.exchangerate-api.com/v6/2103d13e3d31336e65522c18/latest/TRY');
       final currencyResponse = await http.get(currencyUrl);
+
+      final goldUrl = Uri.parse(
+          'https://api.metalpriceapi.com/v1/latest?api_key=a5caa0fa13d8805ea0cfef0494f96cba&base=USD&currencies=XAU');
+      final goldResponse = await http.get(goldUrl);
+
+      print('Crypto response: ${cryptoResponse.body}');
+      print('Currency response: ${currencyResponse.body}');
+      print('Gold response: ${goldResponse.body}');
 
       if (cryptoResponse.statusCode == 200 &&
           currencyResponse.statusCode == 200) {
         final cryptoData = json.decode(cryptoResponse.body);
         final currencyData = json.decode(currencyResponse.body);
+        final goldData = json.decode(goldResponse.body);
 
-        // Invert the values to get USD/TL and EUR/TL.
         final usdRate = (currencyData['conversion_rates']?['USD'] as num?)?.toDouble() ?? 0.0;
         final eurRate = (currencyData['conversion_rates']?['EUR'] as num?)?.toDouble() ?? 0.0;
         setState(() {
@@ -53,7 +60,7 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
           _ethPrice = (cryptoData['ethereum']?['usd'] as num?)?.toDouble() ?? 0.0;
           _dollarPrice = usdRate != 0.0 ? 1 / usdRate : 0.0;
           _euroPrice = eurRate != 0.0 ? 1 / eurRate : 0.0;
-          _goldPrice = 1900.0;
+          _goldPrice = (goldData['rates']?['USDXAU'] as num?)?.toDouble() ?? 0.0;
         });
       }
     } catch (e) {

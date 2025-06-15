@@ -1,4 +1,3 @@
-// File: `lib/screens/savings_wizard_screen.dart`
 import 'package:flutter/material.dart';
 
 class SavingsWizardScreen extends StatefulWidget {
