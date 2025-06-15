@@ -45,7 +45,6 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
     return target + totalInterest;
   }
 
-  // Formats a number so that integer part groups have one dot per three digits and the decimal separator is a comma.
   String formatCurrency(double value) {
     String s = value.toStringAsFixed(2);
     List<String> parts = s.split('.');
@@ -66,57 +65,63 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Updated background color to black
+      backgroundColor: Colors.black,
       appBar: AppBar(title: const Text('Kredi Faizi Hesaplama')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            const Text('Hedef birikim miktarınızı giriniz:'),
-            TextField(
-              controller: _targetController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Gerekli para miktarı',
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus(); // Klavyeyi kapatır
+        },
+        behavior: HitTestBehavior.opaque,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              const Text('Hedef birikim miktarınızı giriniz:', style: TextStyle(color: Colors.white)),
+              TextField(
+                controller: _targetController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Gerekli para miktarı',
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text('Yıllık faiz oranını giriniz (yüzde olarak):'),
-            TextField(
-              controller: _interestController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Faiz oranı',
+              const SizedBox(height: 20),
+              const Text('Yıllık faiz oranını giriniz (yüzde olarak):', style: TextStyle(color: Colors.white)),
+              TextField(
+                controller: _interestController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Faiz oranı',
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text('Taksit sayısını giriniz (ay olarak):'),
-            TextField(
-              controller: _installmentCountController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Taksit sayısı',
+              const SizedBox(height: 20),
+              const Text('Taksit sayısını giriniz (ay olarak):', style: TextStyle(color: Colors.white)),
+              TextField(
+                controller: _installmentCountController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Taksit sayısı',
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _calculateSavings,
-              child: const Text('Hesapla'),
-            ),
-            const SizedBox(height: 20),
-            if (_monthlyPayment != null && _totalAmount != null)
-              Column(
-                children: [
-                  Text('Ayda: ${formatCurrency(_monthlyPayment!)}'),
-                  Text('Faizli Toplam: ${formatCurrency(_totalAmount!)}'),
-                ],
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _calculateSavings,
+                child: const Text('Hesapla'),
               ),
-          ],
+              const SizedBox(height: 20),
+              if (_monthlyPayment != null && _totalAmount != null)
+                Column(
+                  children: [
+                    Text('Ayda: ${formatCurrency(_monthlyPayment!)}', style: const TextStyle(color: Colors.white)),
+                    Text('Faizli Toplam: ${formatCurrency(_totalAmount!)}', style: const TextStyle(color: Colors.white)),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );

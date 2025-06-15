@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/salary_model.dart';
+import 'models/expense_model.dart';
 import 'screens/expense_screen.dart';
 import 'screens/savings_wizard_screen.dart';
 import 'screens/investments_screen.dart';
@@ -9,12 +10,16 @@ import 'screens/news_screen.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => SalaryModel(),
-      child: MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SalaryModel()),
+        ChangeNotifierProvider(create: (_) => ExpenseModel()),
+      ],
+      child: const MyApp(),
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
