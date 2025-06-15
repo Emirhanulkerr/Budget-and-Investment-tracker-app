@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'San Francisco',
       ),
       themeMode: ThemeMode.dark,
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }

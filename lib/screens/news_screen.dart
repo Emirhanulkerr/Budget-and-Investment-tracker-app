@@ -1,4 +1,3 @@
-// File: lib/screens/news_screen.dart
 import 'package:flutter/material.dart';
 
 class NewsScreen extends StatelessWidget {
