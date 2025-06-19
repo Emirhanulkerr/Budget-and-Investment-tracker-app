@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/salary_model.dart';
 import 'models/expense_model.dart';
-import 'screens/expense_screen.dart';
-import 'screens/savings_wizard_screen.dart';
-import 'screens/investments_screen.dart';
-import 'screens/assets_screen.dart';
-import 'screens/news_screen.dart';
+import 'screens/regular_expense_screen2.dart';
+import 'screens/savings_wizard_screen3.dart';
+import 'screens/investments_screen4.dart';
+import 'screens/expense_screen5.dart';
+import 'screens/news_screen1.dart';
 
 void main() {
   runApp(
@@ -124,11 +124,12 @@ class _HomePageState extends State<HomePage> {
         child: BottomNavigationBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          iconSize: 40,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.article), label: 'News'),
+            BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Haberler'),
             BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Ödemeler'),
             BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Faiz'),
             BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Yatırımlar'),

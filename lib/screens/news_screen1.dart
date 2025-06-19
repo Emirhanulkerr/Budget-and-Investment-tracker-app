@@ -7,9 +7,10 @@ class NewsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'News Screen',
-        style: TextStyle(fontSize: 24),
+        'Makine Öğrenmesi ve Yapay Zeka gibi\n özellikler ikinci dönemde eklenecektir.\n',
+        style: TextStyle(fontSize: 15),
       ),
+
     );
   }
 }

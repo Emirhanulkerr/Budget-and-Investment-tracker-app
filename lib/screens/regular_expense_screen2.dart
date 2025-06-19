@@ -106,7 +106,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         }
                       }
                     },
-                    child: const Text('Add'),
+                    child: const Text('Ekle'),
                   ),
                   const SizedBox(height: 16),
                 ],

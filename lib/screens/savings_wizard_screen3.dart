@@ -73,11 +73,11 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
         },
         behavior: HitTestBehavior.opaque,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 90),
               const Text('Hedef birikim miktarınızı giriniz:', style: TextStyle(color: Colors.white)),
               TextField(
                 controller: _targetController,

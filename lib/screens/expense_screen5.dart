@@ -25,12 +25,12 @@ class AssetsScreen extends StatelessWidget {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text('Enter Salary'),
+                title: const Text('Maaş Giriniz'),
                 content: TextField(
                   controller: _controller,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    hintText: 'Enter salary',
+                    hintText: 'Gelir Ekleyin',
                   ),
                 ),
                 actions: [
@@ -38,7 +38,7 @@ class AssetsScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Cancel'),
+                    child: const Text('İptal'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -47,7 +47,7 @@ class AssetsScreen extends StatelessWidget {
                           .setSalary(entered);
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Set'),
+                    child: const Text('Onayla'),
                   ),
                 ],
               );
