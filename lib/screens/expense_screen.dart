@@ -66,7 +66,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     controller: _amountController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      labelText: 'Toplam Miktar (₺)',
+                      labelText: 'Toplam Miktar (\u20BA)',
                     ),
                   ),
                   if (_selectedExpenseType == ExpenseType.fixedCount)
@@ -82,8 +82,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     onPressed: () {
                       if (_descriptionController.text.isNotEmpty &&
                           _amountController.text.isNotEmpty) {
-                        double? enteredAmount =
-                        double.tryParse(_amountController.text);
+                        double? enteredAmount = double.tryParse(_amountController.text);
                         if (enteredAmount != null) {
                           int installmentsCount = 0;
                           double perInstallmentAmount = enteredAmount;
@@ -102,8 +101,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                             remainingInstallments: installmentsCount,
                             expenseType: _selectedExpenseType,
                           );
-                          Provider.of<ExpenseModel>(context, listen: false)
-                              .addInstallment(newInstallment);
+                          Provider.of<ExpenseModel>(context, listen: false).addInstallment(newInstallment);
                           Navigator.pop(ctx);
                         }
                       }
@@ -121,6 +119,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   }
 
   void _togglePaid(int index, Installment installment) {
+    final salaryModel = Provider.of<SalaryModel>(context, listen: false);
     if (installment.isPaid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -129,19 +128,25 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       );
       return;
     }
-    Provider.of<SalaryModel>(context, listen: false).deduct(installment.amount);
+    if (salaryModel.salary < installment.amount) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Yeterli bakiyeniz yok'),
+        ),
+      );
+      return;
+    }
+    salaryModel.deduct(installment.amount);
     installment.isPaid = true;
     if (installment.expenseType == ExpenseType.fixedCount &&
         installment.remainingInstallments > 0) {
       installment.remainingInstallments -= 1;
     }
-    Provider.of<ExpenseModel>(context, listen: false)
-        .notifyListeners();
+    Provider.of<ExpenseModel>(context, listen: false).notifyListeners();
     Future.delayed(const Duration(days: 30), () {
       if (mounted) {
         installment.isPaid = false;
-        Provider.of<ExpenseModel>(context, listen: false)
-            .notifyListeners();
+        Provider.of<ExpenseModel>(context, listen: false).notifyListeners();
       }
     });
   }
@@ -167,21 +172,16 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
               child: Text('Henüz Gider veya Taksit Eklenmedi.'),
             )
                 : ReorderableListView(
-              onReorder: (oldIndex, newIndex) =>
-                  _onReorder(expenseModel, oldIndex, newIndex),
+              onReorder: (oldIndex, newIndex) => _onReorder(expenseModel, oldIndex, newIndex),
               children: [
-                for (int index = 0;
-                index < expenseModel.installments.length;
-                index++)
+                for (int index = 0; index < expenseModel.installments.length; index++)
                   Card(
                     key: ValueKey('installment_$index'),
                     margin: const EdgeInsets.symmetric(vertical: 4.0),
                     child: ListTile(
-                      title: Text(
-                          expenseModel.installments[index].description),
+                      title: Text(expenseModel.installments[index].description),
                       subtitle: Text(
-                        expenseModel.installments[index].expenseType ==
-                            ExpenseType.fixedInfinite
+                        expenseModel.installments[index].expenseType == ExpenseType.fixedInfinite
                             ? 'Miktar: ${formatCurrency(expenseModel.installments[index].amount)}'
                             : 'Taksit Ücreti: ${formatCurrency(expenseModel.installments[index].amount)}\nKalan Taksit: ${expenseModel.installments[index].remainingInstallmentsDisplay}\nKalan Toplam: ${expenseModel.installments[index].remainingTotalAmount}',
                       ),
@@ -189,40 +189,26 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            expenseModel.installments[index]
-                                .remainingInstallments ==
-                                0 &&
-                                expenseModel.installments[index]
-                                    .expenseType ==
-                                    ExpenseType.fixedCount
+                            expenseModel.installments[index].remainingInstallments == 0 &&
+                                expenseModel.installments[index].expenseType == ExpenseType.fixedCount
                                 ? 'Tamamlandı'
                                 : expenseModel.installments[index].isPaid
                                 ? 'Ödendi'
                                 : 'Ödenmedi',
                             style: TextStyle(
-                              color: expenseModel.installments[index]
-                                  .isPaid
-                                  ? Colors.green
-                                  : Colors.red,
+                              color: expenseModel.installments[index].isPaid ? Colors.green : Colors.red,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => Provider.of<ExpenseModel>(context,
-                                listen: false)
-                                .removeInstallment(index),
+                            onPressed: () => Provider.of<ExpenseModel>(context, listen: false).removeInstallment(index),
                           ),
                         ],
                       ),
-                      onTap: (expenseModel.installments[index]
-                          .expenseType ==
-                          ExpenseType.fixedInfinite ||
-                          expenseModel.installments[index]
-                              .remainingInstallments >
-                              0)
-                          ? () => _togglePaid(index,
-                          expenseModel.installments[index])
+                      onTap: (expenseModel.installments[index].expenseType == ExpenseType.fixedInfinite ||
+                          expenseModel.installments[index].remainingInstallments > 0)
+                          ? () => _togglePaid(index, expenseModel.installments[index])
                           : null,
                     ),
                   )
