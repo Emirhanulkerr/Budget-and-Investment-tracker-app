@@ -1,3 +1,4 @@
+// dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/expense_model.dart';
@@ -49,9 +50,9 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     items: ExpenseType.values.map((ExpenseType type) {
                       return DropdownMenuItem<ExpenseType>(
                         value: type,
-                        child: Text(type == ExpenseType.fixedInfinite
-                            ? 'Sabit-sonsuz taksitli'
-                            : 'Adetli taksitli'),
+                        child: Text(
+                          type == ExpenseType.fixedInfinite ? 'Sonsuz Taksit' : 'Sabit Taksit',
+                        ),
                       );
                     }).toList(),
                     isExpanded: true,
@@ -83,27 +84,39 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       if (_descriptionController.text.isNotEmpty &&
                           _amountController.text.isNotEmpty) {
                         double? enteredAmount = double.tryParse(_amountController.text);
-                        if (enteredAmount != null) {
-                          int installmentsCount = 0;
-                          double perInstallmentAmount = enteredAmount;
-                          if (_selectedExpenseType == ExpenseType.fixedCount) {
-                            if (_installmentCountController.text.isEmpty) return;
-                            int? count = int.tryParse(_installmentCountController.text);
-                            if (count == null || count <= 0) return;
-                            installmentsCount = count;
-                            perInstallmentAmount = enteredAmount / count;
-                          } else {
-                            installmentsCount = -1;
-                          }
-                          final newInstallment = Installment(
-                            description: _descriptionController.text,
-                            amount: perInstallmentAmount,
-                            remainingInstallments: installmentsCount,
-                            expenseType: _selectedExpenseType,
+                        if (enteredAmount == null || enteredAmount <= 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('geçerli miktar giriniz')),
                           );
-                          Provider.of<ExpenseModel>(context, listen: false).addInstallment(newInstallment);
-                          Navigator.pop(ctx);
+                          return;
                         }
+                        int installmentsCount = 1;
+                        double perInstallmentAmount = enteredAmount;
+                        if (_selectedExpenseType == ExpenseType.fixedCount) {
+                          if (_installmentCountController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('geçerli miktar giriniz')),
+                            );
+                            return;
+                          }
+                          int? count = int.tryParse(_installmentCountController.text);
+                          if (count == null || count <= 0) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('geçerli miktar giriniz')),
+                            );
+                            return;
+                          }
+                          installmentsCount = count;
+                          perInstallmentAmount = enteredAmount / installmentsCount;
+                        }
+                        final newInstallment = Installment(
+                          description: _descriptionController.text,
+                          amount: perInstallmentAmount,
+                          remainingInstallments: _selectedExpenseType == ExpenseType.fixedCount ? installmentsCount : 0,
+                          expenseType: _selectedExpenseType,
+                        );
+                        Provider.of<ExpenseModel>(context, listen: false).addInstallment(newInstallment);
+                        Navigator.pop(ctx);
                       }
                     },
                     child: const Text('Ekle'),
@@ -138,8 +151,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     }
     salaryModel.deduct(installment.amount);
     installment.isPaid = true;
-    if (installment.expenseType == ExpenseType.fixedCount &&
-        installment.remainingInstallments > 0) {
+    if (installment.expenseType == ExpenseType.fixedCount && installment.remainingInstallments > 0) {
       installment.remainingInstallments -= 1;
     }
     Provider.of<ExpenseModel>(context, listen: false).notifyListeners();
@@ -202,7 +214,11 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => Provider.of<ExpenseModel>(context, listen: false).removeInstallment(index),
+                            onPressed: () {
+                              final salaryModel = Provider.of<SalaryModel>(context, listen: false);
+                              salaryModel.setSalary(salaryModel.salary + expenseModel.installments[index].amount);
+                              Provider.of<ExpenseModel>(context, listen: false).removeInstallment(index);
+                            },
                           ),
                         ],
                       ),

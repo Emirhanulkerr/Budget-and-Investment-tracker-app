@@ -25,9 +25,7 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
 
     if (target == null || annualInterest == null || months == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen Sayı Giriniz'),
-        ),
+        const SnackBar(content: Text('Lütfen Sayı Giriniz')),
       );
       setState(() {
         _monthlyPayment = null;
@@ -36,17 +34,22 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
       return;
     }
 
-    if (target > 0 && annualInterest >= 0 && months > 0) {
-      setState(() {
-        _totalAmount = _calculateTotalWithInterest(target, annualInterest, months);
-        _monthlyPayment = _totalAmount! / months;
-      });
-    } else {
+    // Ensure all entered values are positive.
+    if (target <= 0 || annualInterest <= 0 || months <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('geçerli miktar giriniz')),
+      );
       setState(() {
         _monthlyPayment = null;
         _totalAmount = null;
       });
+      return;
     }
+
+    setState(() {
+      _totalAmount = _calculateTotalWithInterest(target, annualInterest, months);
+      _monthlyPayment = _totalAmount! / months;
+    });
   }
 
   double _calculateTotalWithInterest(double target, double annualInterest, int months) {

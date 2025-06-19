@@ -51,8 +51,21 @@ class Installment {
   }
 }
 
+class IrregularExpense {
+  final String description;
+  final double amount;
+  final DateTime dateAdded;
+
+  IrregularExpense({
+    required this.description,
+    required this.amount,
+    required this.dateAdded,
+  });
+}
+
 class ExpenseModel extends ChangeNotifier {
   final List<Installment> installments = [];
+  final List<IrregularExpense> irregularExpenses = [];
 
   void addInstallment(Installment installment) {
     installments.add(installment);
@@ -66,6 +79,16 @@ class ExpenseModel extends ChangeNotifier {
 
   void updateInstallment(int index, Installment installment) {
     installments[index] = installment;
+    notifyListeners();
+  }
+
+  void addIrregularExpense(IrregularExpense expense) {
+    irregularExpenses.add(expense);
+    notifyListeners();
+  }
+
+  void removeIrregularExpense(int index) {
+    irregularExpenses.removeAt(index);
     notifyListeners();
   }
 }
