@@ -1,3 +1,4 @@
+// dart
 import 'package:flutter/material.dart';
 
 class SavingsWizardScreen extends StatefulWidget {
@@ -22,12 +23,20 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
     final double? annualInterest = double.tryParse(interestText);
     final int? months = int.tryParse(installmentText);
 
-    if (target != null &&
-        target > 0 &&
-        annualInterest != null &&
-        annualInterest >= 0 &&
-        months != null &&
-        months > 0) {
+    if (target == null || annualInterest == null || months == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lütfen Sayı Giriniz'),
+        ),
+      );
+      setState(() {
+        _monthlyPayment = null;
+        _totalAmount = null;
+      });
+      return;
+    }
+
+    if (target > 0 && annualInterest >= 0 && months > 0) {
       setState(() {
         _totalAmount = _calculateTotalWithInterest(target, annualInterest, months);
         _monthlyPayment = _totalAmount! / months;
@@ -66,10 +75,12 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: const Text('Kredi Faizi Hesaplama')),
+      appBar: AppBar(
+        title: const Text('Kredi Faizi Hesaplama', style: TextStyle(fontSize: 22)),
+      ),
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).unfocus(); // Klavyeyi kapatır
+          FocusScope.of(context).unfocus();
         },
         behavior: HitTestBehavior.opaque,
         child: SingleChildScrollView(
@@ -77,8 +88,12 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 90),
-              const Text('Hedef birikim miktarınızı giriniz:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 30),
+              const Text(
+                'Hedef birikim miktarınızı giriniz:',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              const SizedBox(height: 10),
               TextField(
                 controller: _targetController,
                 keyboardType: TextInputType.number,
@@ -86,9 +101,14 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
                   border: OutlineInputBorder(),
                   hintText: 'Gerekli para miktarı',
                 ),
+                style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 20),
-              const Text('Yıllık faiz oranını giriniz (yüzde olarak):', style: TextStyle(color: Colors.white)),
+              const Text(
+                'Yıllık faiz oranını giriniz (yüzde olarak):',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              const SizedBox(height: 10),
               TextField(
                 controller: _interestController,
                 keyboardType: TextInputType.number,
@@ -96,9 +116,14 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
                   border: OutlineInputBorder(),
                   hintText: 'Faiz oranı',
                 ),
+                style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 20),
-              const Text('Taksit sayısını giriniz (ay olarak):', style: TextStyle(color: Colors.white)),
+              const Text(
+                'Taksit sayısını giriniz (ay olarak):',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              const SizedBox(height: 10),
               TextField(
                 controller: _installmentCountController,
                 keyboardType: TextInputType.number,
@@ -106,18 +131,22 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
                   border: OutlineInputBorder(),
                   hintText: 'Taksit sayısı',
                 ),
+                style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _calculateSavings,
-                child: const Text('Hesapla'),
+                child: const Text('Hesapla', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
               if (_monthlyPayment != null && _totalAmount != null)
                 Column(
                   children: [
-                    Text('Ayda: ${formatCurrency(_monthlyPayment!)}', style: const TextStyle(color: Colors.white)),
-                    Text('Faizli Toplam: ${formatCurrency(_totalAmount!)}', style: const TextStyle(color: Colors.white)),
+                    Text('Ayda: ${formatCurrency(_monthlyPayment!)}',
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                    const SizedBox(height: 10),
+                    Text('Faizli Toplam: ${formatCurrency(_totalAmount!)}',
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
                   ],
                 ),
             ],
