@@ -1,4 +1,3 @@
-// dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/expense_model.dart';
@@ -51,7 +50,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       return DropdownMenuItem<ExpenseType>(
                         value: type,
                         child: Text(
-                          type == ExpenseType.fixedInfinite ? 'Sonsuz Taksit' : 'Sabit Taksit',
+                          type == ExpenseType.fixedInfinite ? 'Sabit Gider' : 'Taksitli Gider',
                         ),
                       );
                     }).toList(),
@@ -78,15 +77,16 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         labelText: 'Taksit Sayısı',
                       ),
                     ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 45),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo.shade900),
                     onPressed: () {
                       if (_descriptionController.text.isNotEmpty &&
                           _amountController.text.isNotEmpty) {
                         double? enteredAmount = double.tryParse(_amountController.text);
                         if (enteredAmount == null || enteredAmount <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('geçerli miktar giriniz')),
+                            const SnackBar(content: Text('Geçerli miktar giriniz')),
                           );
                           return;
                         }
@@ -95,14 +95,14 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         if (_selectedExpenseType == ExpenseType.fixedCount) {
                           if (_installmentCountController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('geçerli miktar giriniz')),
+                              const SnackBar(content: Text('Geçerli miktar giriniz')),
                             );
                             return;
                           }
                           int? count = int.tryParse(_installmentCountController.text);
                           if (count == null || count <= 0) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('geçerli miktar giriniz')),
+                              const SnackBar(content: Text('Geçerli miktar giriniz')),
                             );
                             return;
                           }
@@ -212,6 +212,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
@@ -234,6 +235,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.indigo.shade900,
         onPressed: _showAddInstallmentMenu,
         child: const Icon(Icons.add),
       ),

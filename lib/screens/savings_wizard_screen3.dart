@@ -34,7 +34,7 @@ class _SavingsWizardScreenState extends State<SavingsWizardScreen> {
       return;
     }
 
-    // Ensure all entered values are positive.
+    // Negatif sayı girilmesini engelleyen kod
     if (target <= 0 || annualInterest <= 0 || months <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('geçerli miktar giriniz')),

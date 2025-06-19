@@ -71,7 +71,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('geçerli miktar giriniz')),
+                        content: Text('Geçerli miktar giriniz')),
                   );
                 }
               },
@@ -148,7 +148,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('geçerli miktar giriniz')),
+                        content: Text('Geçerli miktar giriniz')),
                   );
                 }
               },
@@ -185,7 +185,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('geçerli miktar giriniz')),
+                        content: Text('Geçerli miktar giriniz')),
                   );
                 }
               },
@@ -201,11 +201,11 @@ class _AssetsScreenState extends State<AssetsScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('geçerli miktar giriniz')),
+                        content: Text('Geçerli miktar giriniz')),
                   );
                 }
               },
-              child: const Text('Maaşı Düzenle'),
+              child: const Text('Ana Parayı Düzenle'),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -220,6 +220,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(title: const Text('Düzensiz Giderler')),
       body: Consumer<ExpenseModel>(
         builder: (context, expenseModel, child) {
@@ -276,12 +277,14 @@ class _AssetsScreenState extends State<AssetsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton(
+            backgroundColor: Colors.indigo.shade900,
             heroTag: 'salary',
             onPressed: _showSalaryDialog,
             child: const Icon(Icons.account_balance_wallet),
           ),
           const SizedBox(height: 16),
           FloatingActionButton(
+            backgroundColor: Colors.indigo.shade900,
             heroTag: 'expense',
             onPressed: _showAddExpenseDialog,
             child: const Icon(Icons.add),
