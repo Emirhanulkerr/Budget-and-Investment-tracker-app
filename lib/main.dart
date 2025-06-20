@@ -8,6 +8,7 @@ import 'screens/investments_screen4.dart';
 import 'screens/expense_screen5.dart';
 import 'screens/news_screen1.dart';
 
+
 void main() {
   runApp(
     MultiProvider(

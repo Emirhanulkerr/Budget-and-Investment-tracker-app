@@ -1,5 +1,4 @@
 // dart
-// File: lib/screens/investments_screen4.dart
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -90,8 +89,16 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
               children: [
                 DropdownButton<String>(
                   value: selectedAsset,
-                  items: <String>['Dolar', 'Euro', 'Gram Altın','Ons Altın', 'Gram Gümüş','Ons Gümüş', 'Bitcoin', 'Ethereum']
-                      .map((String asset) {
+                  items: <String>[
+                    'Dolar',
+                    'Euro',
+                    'Gram Altın',
+                    'Ons Altın',
+                    'Gram Gümüş',
+                    'Ons Gümüş',
+                    'Bitcoin',
+                    'Ethereum'
+                  ].map((String asset) {
                     return DropdownMenuItem<String>(
                       value: asset,
                       child: Text(asset),
@@ -191,8 +198,16 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
               children: [
                 DropdownButton<String>(
                   value: selectedAsset,
-                  items: <String>['Dolar', 'Euro', 'Gram Altın', 'Gram Gümüş', 'Bitcoin', 'Ethereum']
-                      .map((String asset) {
+                  items: <String>[
+                    'Dolar',
+                    'Euro',
+                    'Gram Altın',
+                    'Ons Altın',
+                    'Gram Gümüş',
+                    'Ons Gümüş',
+                    'Bitcoin',
+                    'Ethereum'
+                  ].map((String asset) {
                     return DropdownMenuItem<String>(
                       value: asset,
                       child: Text(asset),
@@ -256,13 +271,11 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
                       break;
                   }
                   final double tlValue = amount * conversionFactor;
-
                   final updatedHolding = InvestmentHolding(
                     asset: selectedAsset,
                     quantity: amount,
                     tlValue: tlValue,
                   );
-
                   setState(() {
                     _holdings[index] = updatedHolding;
                   });
@@ -316,14 +329,9 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   }
 
   Widget _buildHoldingTile(InvestmentHolding holding, int index) {
-    String formattedQuantity;
-
-    if (holding.asset == 'Bitcoin' || holding.asset == 'Ethereum') {
-      formattedQuantity = holding.quantity.toStringAsFixed(6);
-    } else {
-      formattedQuantity = holding.quantity.toStringAsFixed(2);
-    }
-
+    String formattedQuantity = (holding.asset == 'Bitcoin' || holding.asset == 'Ethereum')
+        ? holding.quantity.toStringAsFixed(6)
+        : holding.quantity.toStringAsFixed(2);
     return Card(
       color: Colors.grey[900],
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
@@ -336,18 +344,31 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
           'Toplam Değer: ₺${holding.tlValue.toStringAsFixed(2)}',
           style: const TextStyle(color: Colors.green),
         ),
-        trailing: IconButton(
-          icon: Icon(Icons.edit, color: Colors.blue),
-          onPressed: () {
-            _showEditInvestmentDialog(holding, index);
-          },
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                _showEditInvestmentDialog(holding, index);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                setState(() {
+                  _holdings.removeAt(index);
+                });
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 
   double _calculateTotalBalance() {
-    return _holdings.fold(0.0, (sum, currentHolding) => sum + currentHolding.tlValue);
+    return _holdings.fold(0.0, (sum, current) => sum + current.tlValue);
   }
 
   @override
@@ -359,7 +380,6 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
   @override
   Widget build(BuildContext context) {
     final double totalBalance = _calculateTotalBalance();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Yatırımlarım'),
@@ -370,20 +390,12 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Toplam Bakiye: ₺${totalBalance.toStringAsFixed(2)}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-
-              ],
+            child: Text(
+              'Toplam Bakiye: ₺${totalBalance.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
           ),
-
           const SizedBox(height: 10),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: GridView.count(
@@ -397,26 +409,19 @@ class _InvestmentsPriceScreenState extends State<InvestmentsPriceScreen> {
                 _buildPriceTile('Ons Gümüş', r'$', _silverPrice),
                 _buildPriceTile('Bitcoin', r'$', _bitcoinPrice),
                 _buildPriceTile('Ethereum', r'$', _ethPrice),
-                _buildPriceTile('Gram Altın', r'$', _goldPrice/ 31.1035),
-                _buildPriceTile('Gram Gümüş', r'$', _silverPrice/ 31.1035),
-
-
+                _buildPriceTile('Gram Altın', r'$', _goldPrice / 31.1035),
+                _buildPriceTile('Gram Gümüş', r'$', _silverPrice / 31.1035),
               ],
             ),
           ),
-
           const Divider(color: Colors.white, thickness: 1, indent: 16, endIndent: 16),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               'Varlıklarım',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(color: Colors.white),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
             ),
           ),
-
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
